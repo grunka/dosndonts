@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Oh Come On...</title>
+	<link href='//fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Lobster&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("span.bleep").each(function() {
+				var that = this;
+				var intervalHandle = setInterval(function() {
+					var current = $(that).text();
+					var next = current.replace(/[^* ]/, "*");
+					if (next === current) {
+						clearInterval(intervalHandle);
+					} else {
+						$(that).text(next);
+					}
+				}, 100);
+			});
+		});
+	</script>
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+			border: 0;
+		}
+		body {
+			padding-bottom: 2em;
+		}
+		span.bleep {
+		}
+		pre {
+			font-family: 'Ubuntu Mono', cursive;
+			font-size: 14px;
+			margin: 0 0.5em 0.5em 0.5em;
+			padding: 0.5em;
+			overflow: auto;
+		}
+		.do pre {
+			background-color: #cfc;
+		}
+		.dont pre {
+			background-color: #fcc;
+		}
+		.header {
+			font-family: 'Lobster', cursive;
+			text-align: center;
+			font-size: 42px;
+		}
+		.example {
+			padding-top: 0.5em;
+			width: 1010px;
+			margin: 0 auto 0 auto;
+			clear: both;
+		}
+		.summary {
+			border-top: 1px solid #aaa;
+			font-family: 'Lobster', cursive;
+			font-size:28px;
+		}
+		.do {
+			float: left;
+			width: 50%;
+		}
+		.dont {
+			float: left;
+			width: 50%;
+		}
+	</style>
+</head>
+<body>
+	<div class="example header">
+		<div class="do">Do</div>
+		<div class="donot">Don't</div>
+	</div>
+	<div class="example">
+		<div class="summary">Iterating through collections</div>
+		<div class="do">
+			<pre>
+for (String item : items) {
+	...
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+for (int i = 0; i &lt; items.size(); i++) {
+	String item = items.get(i);
+	...
+}
+			</pre>
+			<pre>
+Iterator&lt;String&gt; iterator = items.getIterator();
+while (iterator.hasNext()) {
+	String item = iterator.next();
+	...
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Iteration through maps</div>
+		<div class="do">
+			<pre>
+for (String value : mapOfValues.values()) {
+	...
+}
+			</pre>
+			<pre>
+for (String key : mapOfValues.keySet()) {
+	...
+}
+			</pre>
+			<pre>
+for (Map.Entry&lt;String, String&gt; entry : mapOfValues.entrySet()) {
+	String key = entry.getKey();
+	String value = entry.getValue();
+	...
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+for (String key : mapOfValues.keySet()) {
+	String value = mapOfValues.get(key);
+	...
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Names of variables</div>
+		<div class="do">
+			<pre>
+String nameDescribingTheContent = service.getContent();
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+String s = service.getContent();
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Defining variables</div>
+		<div class="do">
+			<pre>
+String nameDescribingTheContent = service.getContent();
+...
+String nameDescribingSomethingElse = service.getSomethingElse();
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+String s = null;
+...
+s = service.getContent();
+...
+s = service.getSomethingElse();
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Initialization of variables</div>
+		<div class="do">
+			<pre>
+List&lt;Something&gt; listOfSomething = new ArrayList&lt;Something&gt;;
+for (...) {
+	...
+	listOfSomething.add(something);
+}
+			</pre>
+			<pre>
+for (...) {
+	List&lt;Something&gt; onlyInsideLoop = new ArrayList&lt;Something&gt;;
+	...
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+List&lt;Something&gt; listOfSomething = null;
+...
+for (...) {
+	...
+	if (listOfSomething == null) {
+		listOfSomething = new ArrayList&lt;Something&gt;;
+	}
+	listOfSomething.add(something);
+}
+			</pre>
+			<pre>
+List&lt;Something&gt; onlyInsideLoop = null;
+...
+for (...) {
+	onlyInsideLoop = new ArrayList&lt;Something&gt;;
+	...
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Exception handling</div>
+		<div class="do">
+			<pre>
+try {
+	// A few lines doing something specific
+	...
+} catch (SpecificException e) {
+	// Handling the one or two things that you actually
+	// can do something about
+	...
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+try {
+	... lots of lines ...
+} catch (Exception e) {
+	// Probably something exceptionally complex
+	...
+}
+			</pre>
+			<pre>
+try {
+	...
+} catch (Exception e) {
+	// Nothing
+}
+			</pre>
+			<pre>
+try {
+	...
+} catch (Throwable t) {
+	// What the f<span class="bleep">uc</span>k do you think you are doing?
+	...
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Doing SQL queries</div>
+		<div class="do">
+			<pre>
+PreparedStatement statment = connection.prepareStatment(sql);
+try {
+	...
+} catch (SQLException e) {
+	// Either retry or just log the error or don't catch at all
+	...
+} finally {
+	statment.close();
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+PreparedStatement statment = null;
+try {
+	statment = connection.prepareStatment(sql);
+	...
+} catch (SQLException e) {
+	...
+} finally {
+	if (statment != null) {
+		statment.close();
+	}
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Using streams and other things that need to be closed</div>
+		<div class="do">
+			<pre>
+Path filePath = Paths.get("SomeFile.txt");
+InputStream inputStream = Files.newInputStream(filePath);
+try {
+	...
+} finally {
+	inputStream.close();
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+InputStream inputStream = ...
+...
+if (inputStream != null) {
+	inputStream.close();
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Getting results from within a loop</div>
+		<div class="do">
+			<pre>
+private boolean checkForSomeCondition(...) {
+	for (...) {
+		...
+		if (someCondition) {
+			return true;
+		}
+	}
+	return false;
+}
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+try {
+	for (...) {
+		...
+		if (someCondition) {
+			throw new SomeException();
+		}
+	}
+} catch (SomeException exception) {
+	// Maybe do something with the exception, maybe not
+}
+			</pre>
+		</div>
+	</div>
+	<div class="example">
+		<div class="summary">Implementing Comparables</div>
+		<div class="do">
+			<pre>
+public class AnObject implements Comparable<AnObject> {
+	@Override
+	public int compareTo(AnObject other) {
+		return Integer.compare(id, other.getId());
+	}
+}			
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+@SuppressWarnings("rawtypes")
+public class AnObject implements Comparable {
+	@Override
+	public int compareTo(Object arg0) {
+		AnObject anObject = (AnObject) arg0;
+		...
+	}
+}
+			</pre>
+			<pre>
+public int compareTo(AnObject other) {
+	return Integer.valueOf(this.id).compareTo(Integer.valueOf(other.getId()));
+}
+			</pre>
+		</div>
+	</div>
+	<!--
+	<div class="example">
+		<div class="summary"></div>
+		<div class="do">
+			<pre>
+			</pre>
+		</div>
+		<div class="dont">
+			<pre>
+			</pre>
+		</div>
+	</div>
+	-->
+</body>
+</html>
