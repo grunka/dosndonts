@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -247,14 +246,11 @@ try {
 		<div class="summary">Doing SQL queries</div>
 		<div class="do">
 			<pre>
-PreparedStatement statment = connection.prepareStatment(sql);
-try {
+try (PreparedStatement statment = connection.prepareStatment(sql)) {
 	...
 } catch (SQLException e) {
 	// Either retry or just log the error or don't catch at all
 	...
-} finally {
-	statment.close();
 }
 			</pre>
 		</div>
@@ -279,11 +275,8 @@ try {
 		<div class="do">
 			<pre>
 Path filePath = Paths.get("SomeFile.txt");
-InputStream inputStream = Files.newInputStream(filePath);
-try {
+try (InputStream inputStream = Files.newInputStream(filePath)) {
 	...
-} finally {
-	inputStream.close();
 }
 			</pre>
 		</div>
